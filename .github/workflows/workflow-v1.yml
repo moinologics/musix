@@ -1,0 +1,34 @@
+name: Build & Deploy to glitch.com
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-to-glitch:
+    name: Deploying to Glitch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+      - name: install npm packages
+        run: npm ci
+      - name: Build Vue Js
+        run: npm run build
+      - name: setup git
+        run: |
+          git config --global user.email 'mohin.ahmad.dev@glitch.me'
+          git config --global user.name 'Moin Ahmad'
+      - name: deploy
+        run: | 
+          [ ! -e glitch-project ] || rm -rf glitch-project
+          git clone https://{{secrets.GLITCH_GIT_TOKEN}}@api.glitch.com/git/project-musix glitch-project
+          cp -rf dist/* glitch-project
+          cd glitch-project
+          git add .
+          git diff-index --quiet HEAD || git commit -m 'committing from github workflow'
+          git push
