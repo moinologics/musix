@@ -1,19 +1,20 @@
 <template>
   <div class="py-10 text-center">
     <div class="px-5 text-3xl font-semibold scroll-container">
-      <div class="scroll-text"> Alan Walker Best Songs Of All Time - Alan Walker Full Album 2023 </div>
+      <div class="scroll-text"> {{ musixStore.media.title }} </div>
     </div>
-    <h3 class="mt-8 text-2xl font-semibold"> Different World </h3>
-    <h4 class="mt-8 text-xl font-semibold"> Alan Walker </h4>
+    <h3 class="mt-8 text-2xl font-semibold"> {{ musixStore.media.albums.map(a => a.name).join(', ') }} </h3>
+    <h4 class="mt-8 text-xl font-semibold"> {{ musixStore.media.artists.map(a => a.name).join(', ') }} </h4>
   </div>
 </template>
 
 <script>
+  import { useMusixStore } from '../stores/musix';
 
   export default {
     data() {
       return {
-
+        musixStore: useMusixStore(),
       }
     }
   }

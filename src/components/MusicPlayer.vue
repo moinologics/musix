@@ -26,7 +26,6 @@
       <img src="../assets/icons/next.svg" class="w-7/12 mx-auto"/>
     </div>
   </div>
-  <!-- <input type="file" id="file" /> -->
 </template>
 
 <script>

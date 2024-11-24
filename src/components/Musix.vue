@@ -15,6 +15,8 @@
           <MusicPlayer />
         </div>
       </div>
+      <!-- <input type="file" ref="file" @change="handleFileChange"/> -->
+      <AddMusic />
     </div>
   </div>
 </template>
@@ -23,8 +25,11 @@
   import { useMusixStore } from '../stores/musix';
   import LyricsPlayer from './LyricsPlayer.vue';
   import MediaInfo from './MediaInfo.vue';
+  import AddMusic from './AddMusic.vue';
   import MusicPlayer from './MusicPlayer.vue';
-  import { secondsTohhmmss } from '../utils/common';
+  import { secondsTohhmmss, fileToBlob } from '../utils/common';
+
+  import { musixDB } from '../db';
 
   export default {
     data() {
@@ -34,9 +39,35 @@
       };
     },
     methods: {
+      async handleFileChange() {
+        // const id = await musixDB.albums.add({
+        //   name: 'The Sped Up EP',
+        //   artists: [1]
+        // });
+        // const file = this.$refs.file.files[0];
+        // if(!file) return;
+        // let targetDB;
+        // if(file.type === 'audio/mpeg') {
+        //   targetDB = musixDB.audios;
+        // } else if(file.type === 'text/plain') {
+        //   targetDB = musixDB.lyrics;
+        // } else {
+        //   return;
+        // }
+        // const blob = await fileToBlob(file);
+        // const id = await targetDB.add({
+        //   audioId: 1,
+        //   data: blob
+        // });
+        console.log(id);
+        // console.log(await targetDB.where({id: id}).first());
+      },
       async setupMusix() {
-        await this.musixStore.initializeFileStorage();
-        await this.musixStore.loadSongAndLrc();
+        const isLoadSuccess = await this.musixStore.loadSongAndLrc();
+        if(!isLoadSuccess) {
+          console.log('no song found');
+          return;
+        }
         this.musixStore.audioPlayer = this.$refs.wavesurfer.waveSurfer;
         this.musixStore.setupAudioPlayer();
       },
@@ -45,7 +76,8 @@
     components: {
       MediaInfo,
       LyricsPlayer,
-      MusicPlayer
+      MusicPlayer,
+      AddMusic
     },
     mounted() {
       this.setupMusix();
